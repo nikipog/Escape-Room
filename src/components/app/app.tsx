@@ -23,6 +23,7 @@ function App(): JSX.Element {
 
             <Route
               index
+              path={AppRoute.Main}
               element={<MainPage />}
             />
             <Route
