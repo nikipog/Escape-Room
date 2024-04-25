@@ -1,48 +1,102 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { getAuthorizationStatus } from '../../mocks/authorizations-status';
+
 
 function Layout(): JSX.Element {
+
+  const location = useLocation();
+  const authorizationStatus = getAuthorizationStatus();
+  const isLoginPage = location.pathname === AppRoute.Login;
+  const isMainPage = location.pathname === AppRoute.Main;
+
   return (
     <div className="wrapper">
       <header className="header">
         <div className="container container--size-l">
-          <span className="logo header__logo">
-            <svg width={134} height={52} aria-hidden="true">
-              <use xlinkHref="#logo" />
-            </svg>
-          </span>
+          {
+            isMainPage &&
+            <span className="logo header__logo">
+              <svg width={134} height={52} aria-hidden="true">
+                <use xlinkHref="#logo" />
+              </svg>
+            </span>
+          }
+          {
+            !isMainPage &&
+            <Link
+              className="logo header__logo"
+              to={AppRoute.Main}
+              aria-label="Перейти на Главную"
+            >
+              <svg width={134} height={52} aria-hidden="true">
+                <use xlinkHref="#logo" />
+              </svg>
+            </Link>
+          }
           <nav className="main-nav header__main-nav">
             <ul className="main-nav__list">
               <li className="main-nav__item">
-                <a className="link active" href="index.html">
+                <Link
+                  className="link active"
+                  to={AppRoute.Main}
+                >
                   Квесты
-                </a>
+                </Link>
               </li>
               <li className="main-nav__item">
-                <a className="link" href="contacts.html">
+                <Link
+                  className="link"
+                  to={AppRoute.Contacts}
+                >
                   Контакты
-                </a>
+                </Link>
               </li>
-              <li className="main-nav__item">
-                <a className="link" href="my-quests.html">
-                  Мои бронирования
-                </a>
-              </li>
+              {
+                authorizationStatus === AuthorizationStatus.Auth &&
+                <li className="main-nav__item">
+                  <Link
+                    className="link"
+                    to={AppRoute.MyQuests}
+                  >
+                    Мои бронирования
+                  </Link>
+                </li>
+              }
             </ul>
           </nav>
           <div className="header__side-nav">
-            <a className="btn btn--accent header__side-item" href="#">
-              Выйти
-            </a>
+            {!isLoginPage && (
+              authorizationStatus === AuthorizationStatus.Auth &&
+              <Link
+                className="btn btn--accent header__side-item"
+                to={AppRoute.Main}
+              >
+                Выйти
+              </Link>
+            )}
+
+            {!isLoginPage && (
+              authorizationStatus !== AuthorizationStatus.Auth &&
+              < Link
+                className="btn header__side-item header__login-btn"
+                to={AppRoute.Login}
+              >
+                Вход
+              </Link>
+            )}
+
             <a
               className="link header__side-item header__phone-link"
               href="tel:88003335599"
+              aria-label="Позвоните нам по номеру 8 (000) 333-55-99"
             >
               8 (000) 111-11-11
             </a>
           </div>
         </div>
-      </header>
-      <Outlet/>
+      </header >
+      <Outlet />
       <footer className="footer">
         <div className="container container--size-l">
           <div className="socials">
@@ -103,7 +157,7 @@ function Layout(): JSX.Element {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
 export default Layout;
