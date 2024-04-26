@@ -12,3 +12,10 @@ export enum AuthorizationStatus {
   NoAuth = 'NoAuth',
   Unknown = 'Unknown'
 }
+
+export const Endpoint = {
+  Quests: '/quests'
+} as const;
+
+export const enum RequestStatus { Idle, Loading, Success, Failed }
+

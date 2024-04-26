@@ -4,7 +4,7 @@ import { questsSlice } from './slices/quests';
 
 
 const reducer = combineReducers({
-  [questssSlice.name]: offersSlice.reducer,
+  [questsSlice.name]: questsSlice.reducer,
 });
 
 
