@@ -1,10 +1,22 @@
+import { useCallback, useMemo, useState } from 'react';
 import CardsGrid from '../../components/cards-grid/cards-grid';
+import { QuestGenre } from '../../const';
 import { useAppSelector } from '../../hooks/store';
 import { questsSelectors } from '../../store/slices/quests';
+import GenreFilter from '../../components/genre-filter/genre-filter';
+
 
 function MainPage(): JSX.Element {
   const quests = useAppSelector(questsSelectors.quests);
 
+  const [selectedGenre, setSelectedGenre] = useState(QuestGenre.All);
+  //const [selectedLevel, setSelectedLevel] = useState('any');
+
+  const handleGenreChange = useCallback((genre: QuestGenre) => {
+    setSelectedGenre(genre);
+  }, []);
+
+  const filteredQuests = useMemo(() => quests.filter((quest) => selectedGenre === QuestGenre.All || quest.type === selectedGenre), [quests, selectedGenre]);
 
   return (
     <main className="page-content">
@@ -19,95 +31,7 @@ function MainPage(): JSX.Element {
         </div>
         <div className="page-content__item">
           <form className="filter" action="#" method="get">
-            <fieldset className="filter__section">
-              <legend className="visually-hidden">Тематика</legend>
-              <ul className="filter__list">
-                <li className="filter__item">
-                  <input type="radio" name="type" id="all" defaultChecked />
-                  <label className="filter__label" htmlFor="all">
-                    <svg
-                      className="filter__icon"
-                      width={26}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-all-quests" />
-                    </svg>
-                    <span className="filter__label-text">Все квесты</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="type" id="adventure" />
-                  <label className="filter__label" htmlFor="adventure">
-                    <svg
-                      className="filter__icon"
-                      width={36}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-adventure" />
-                    </svg>
-                    <span className="filter__label-text">Приключения</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="type" id="horror" />
-                  <label className="filter__label" htmlFor="horror">
-                    <svg
-                      className="filter__icon"
-                      width={30}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-horror" />
-                    </svg>
-                    <span className="filter__label-text">Ужасы</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="type" id="mystic" />
-                  <label className="filter__label" htmlFor="mystic">
-                    <svg
-                      className="filter__icon"
-                      width={30}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-mystic" />
-                    </svg>
-                    <span className="filter__label-text">Мистика</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="type" id="detective" />
-                  <label className="filter__label" htmlFor="detective">
-                    <svg
-                      className="filter__icon"
-                      width={40}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-detective" />
-                    </svg>
-                    <span className="filter__label-text">Детектив</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="type" id="sciFi" />
-                  <label className="filter__label" htmlFor="sciFi">
-                    <svg
-                      className="filter__icon"
-                      width={28}
-                      height={30}
-                      aria-hidden="true"
-                    >
-                      <use xlinkHref="#icon-sci-fi" />
-                    </svg>
-                    <span className="filter__label-text">Sci-fi</span>
-                  </label>
-                </li>
-              </ul>
-            </fieldset>
+            <GenreFilter onGenreChange={handleGenreChange} />
             <fieldset className="filter__section">
               <legend className="visually-hidden">Сложность</legend>
               <ul className="filter__list">
@@ -140,7 +64,7 @@ function MainPage(): JSX.Element {
           </form>
         </div>
         <h2 className="title visually-hidden">Выберите квест</h2>
-        <CardsGrid allQuests={quests}/>
+        <CardsGrid allQuests={filteredQuests} />
       </div>
     </main>
   );

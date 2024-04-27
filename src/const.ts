@@ -22,3 +22,13 @@ export const enum RequestStatus { Idle, Loading, Success, Failed }
 export const ToastifyErrors = {
   FetchAllQuestsError: 'Не удалось загрузить данные с сервера'
 } as const;
+
+export const enum QuestGenre {
+  All = 'all',
+  Adventures = 'adventures',
+  Horror = 'horror',
+  Mystic = 'mystic',
+  Detective = 'detective',
+  SciFi = 'sci-fi'
+}
+
