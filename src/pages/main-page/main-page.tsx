@@ -1,6 +1,11 @@
 import CardsGrid from '../../components/cards-grid/cards-grid';
+import { useAppSelector } from '../../hooks/store';
+import { questsSelectors } from '../../store/slices/quests';
 
 function MainPage(): JSX.Element {
+  const quests = useAppSelector(questsSelectors.quests);
+
+
   return (
     <main className="page-content">
       <div className="container">
@@ -135,7 +140,7 @@ function MainPage(): JSX.Element {
           </form>
         </div>
         <h2 className="title visually-hidden">Выберите квест</h2>
-        <CardsGrid/>
+        <CardsGrid allQuests={quests}/>
       </div>
     </main>
   );

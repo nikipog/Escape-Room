@@ -14,8 +14,11 @@ export enum AuthorizationStatus {
 }
 
 export const Endpoint = {
-  Quests: '/quests'
+  Quests: '/quest'
 } as const;
 
 export const enum RequestStatus { Idle, Loading, Success, Failed }
 
+export const ToastifyErrors = {
+  FetchAllQuestsError: 'Не удалось загрузить данные с сервера'
+} as const;

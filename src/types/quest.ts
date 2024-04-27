@@ -9,7 +9,7 @@ type QuestCard = {
   previewImgWebp: string;
   level: QuestLevel;
   type: QuestType;
-  peopleMinMax: [number];
+  peopleMinMax: [number, number];
   }
 
 export type {QuestCard};

@@ -1,5 +1,6 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { ToastContainer, toast } from 'react-toastify';
 import MainPage from '../../pages/main-page/main-page';
 import QuestPage from '../../pages/quest-page/quest-page';
 import ContactsPage from '../../pages/contacts-page/contacts-page';
@@ -8,12 +9,27 @@ import BookingPage from '../../pages/booking-page/booking-page';
 import MyQuestsPage from '../../pages/my-quests-page/my-quests-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import Layout from '../layout/layout';
-import { AppRoute } from '../../const';
+import { AppRoute, ToastifyErrors } from '../../const';
+import { useAppDispatch } from '../../hooks/store';
+import { useEffect } from 'react';
+import { questsActions } from '../../store/slices/quests';
 
 
 function App(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(questsActions.fetchAllQuests())
+      .unwrap()
+      .catch(() => {
+        toast.error(ToastifyErrors.FetchAllQuestsError);
+      });
+  }, [dispatch]);
+
+
   return (
     <HelmetProvider>
+      <ToastContainer />
       <BrowserRouter>
         <Routes>
           <Route
