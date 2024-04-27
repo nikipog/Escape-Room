@@ -32,3 +32,10 @@ export const enum QuestGenre {
   SciFi = 'sci-fi'
 }
 
+export const enum QuestDifficulty {
+  Any = 'any',
+  Easy = 'easy',
+  Medium = 'medium',
+  Hard = 'hard'
+}
+

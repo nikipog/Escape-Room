@@ -1,22 +1,29 @@
 import { useCallback, useMemo, useState } from 'react';
 import CardsGrid from '../../components/cards-grid/cards-grid';
-import { QuestGenre } from '../../const';
+import { QuestDifficulty, QuestGenre } from '../../const';
 import { useAppSelector } from '../../hooks/store';
 import { questsSelectors } from '../../store/slices/quests';
 import GenreFilter from '../../components/genre-filter/genre-filter';
+import DifficultyFilter from '../../components/difficulty-filter/difficulty-filter';
 
 
 function MainPage(): JSX.Element {
   const quests = useAppSelector(questsSelectors.quests);
 
   const [selectedGenre, setSelectedGenre] = useState(QuestGenre.All);
-  //const [selectedLevel, setSelectedLevel] = useState('any');
+  const [selectedLevel, setSelectedLevel] = useState(QuestDifficulty.Any);
 
   const handleGenreChange = useCallback((genre: QuestGenre) => {
     setSelectedGenre(genre);
   }, []);
 
-  const filteredQuests = useMemo(() => quests.filter((quest) => selectedGenre === QuestGenre.All || quest.type === selectedGenre), [quests, selectedGenre]);
+  const handleDifficultyChange = useCallback((difficulty: QuestDifficulty) => {
+    setSelectedLevel(difficulty);
+  }, []);
+
+  const filteredQuests = useMemo(() => quests.filter((quest) =>
+    (selectedGenre === QuestGenre.All || quest.type === selectedGenre) &&
+    (selectedLevel === QuestDifficulty.Any || quest.level === selectedLevel)), [quests, selectedGenre, selectedLevel]);
 
   return (
     <main className="page-content">
@@ -32,35 +39,7 @@ function MainPage(): JSX.Element {
         <div className="page-content__item">
           <form className="filter" action="#" method="get">
             <GenreFilter onGenreChange={handleGenreChange} />
-            <fieldset className="filter__section">
-              <legend className="visually-hidden">Сложность</legend>
-              <ul className="filter__list">
-                <li className="filter__item">
-                  <input type="radio" name="level" id="any" defaultChecked />
-                  <label className="filter__label" htmlFor="any">
-                    <span className="filter__label-text">Любой</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="level" id="easy" />
-                  <label className="filter__label" htmlFor="easy">
-                    <span className="filter__label-text">Лёгкий</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="level" id="middle" />
-                  <label className="filter__label" htmlFor="middle">
-                    <span className="filter__label-text">Средний</span>
-                  </label>
-                </li>
-                <li className="filter__item">
-                  <input type="radio" name="level" id="hard" />
-                  <label className="filter__label" htmlFor="hard">
-                    <span className="filter__label-text">Сложный</span>
-                  </label>
-                </li>
-              </ul>
-            </fieldset>
+            <DifficultyFilter onDifficultyChange={handleDifficultyChange} />
           </form>
         </div>
         <h2 className="title visually-hidden">Выберите квест</h2>
