@@ -1,6 +1,6 @@
 type QuestLevel = 'easy' | 'medium' | 'hard';
 
-type QuestType = 'adventures'|'horror'|'mystic'|'detective'|'sci-fi';
+type QuestType = 'adventures' | 'horror' | 'mystic' | 'detective' | 'sci-fi';
 
 type QuestCard = {
   id: string;
@@ -10,6 +10,12 @@ type QuestCard = {
   level: QuestLevel;
   type: QuestType;
   peopleMinMax: [number, number];
-  }
+}
 
-export type {QuestCard};
+type FullQuestCard = QuestCard & {
+  description: string;
+  coverImg: string;
+  coverImgWebp: string;
+}
+
+export type { QuestCard, FullQuestCard };

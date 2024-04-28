@@ -1,64 +1,117 @@
+import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { questActions, questSelector } from '../../store/slices/quest';
+import { RequestStatus, ToastifyMessage, ParticipantsRange, DescriptionRange, AppRoute } from '../../const';
+import NotFoundPage from '../not-found-page/not-found-page';
+import WrongParticipantsCount from '../../components/wrong-participants-number/wrong-participants-number';
+import { localizeQuestGenre, localizeQuestLevel } from './utils';
+
 function QuestPage(): JSX.Element {
+  const quest = useAppSelector(questSelector.quest);
+  const status = useAppSelector(questSelector.questStatus);
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
+
+  useEffect(() => {
+    dispatch(questActions.fetchQuest(id as string))
+      .unwrap()
+      .catch(() => {
+        toast.error(ToastifyMessage.FetchQuestsError);
+      });
+  }, [dispatch, id]);
+
+  if (status === RequestStatus.Loading) {
+    return <div>Loading ...</div>;
+  }
+
+  if (quest) {
+    const { peopleMinMax } = quest;
+    const minParticipantsServer = peopleMinMax[0];
+    const maxParticipantsServer = peopleMinMax[1];
+
+    if (minParticipantsServer < ParticipantsRange.MinParticipantsCount ||
+      maxParticipantsServer > ParticipantsRange.MaxParticipantsCount
+    ) {
+      return <WrongParticipantsCount />;
+    }
+  }
+  // в случае если fail или ничего не найдено:
+  //(запрос детального оффера useAppSelector(questSelector.offer вернул null)
+  if (status === RequestStatus.Failed || !quest) {
+    return <NotFoundPage />;
+  }
+
+  const { coverImgWebp, title, coverImg, type, peopleMinMax, level } = quest;
+
+  const description = quest.description.length >
+    DescriptionRange.MaxDescriptionLength ?
+    `${quest.description.slice(DescriptionRange.IdleDescriptionLength, DescriptionRange.MaxUnslicedDescriptionLength)}...` :
+    quest.description;
+
+  const minParticipants = peopleMinMax[0];
+  const maxParticipants = peopleMinMax[1];
+
+  const localizedQuestGenre = localizeQuestGenre(type);
+  const localizedQuestLevel = localizeQuestLevel(level);
+
+
   return (
-    <div className="wrapper">
-      <main className="decorated-page quest-page">
-        <div className="decorated-page__decor" aria-hidden="true">
-          <picture>
-            <source
-              type="image/webp"
-              srcSet="img/content/maniac/maniac-size-m.webp, img/content/maniac/maniac-size-m@2x.webp 2x"
-            />
-            <img
-              src="img/content/maniac/maniac-size-m.jpg"
-              srcSet="img/content/maniac/maniac-size-m@2x.jpg 2x"
-              width={1366}
-              height={768}
-              alt=""
-            />
-          </picture>
+    <main className="decorated-page quest-page">
+      <Helmet>
+        <title>Escape Room. Quest Page</title>
+      </Helmet>
+      <div className="decorated-page__decor" aria-hidden="true">
+        <picture>
+          <source
+            type="image/webp"
+            src={coverImgWebp}
+          />
+          <img
+            src={coverImg}
+            width={1366}
+            height={768}
+            alt={title}
+          />
+        </picture>
+      </div>
+      <div className="container container--size-l">
+        <div className="quest-page__content">
+          <h1 className="title title--size-l title--uppercase quest-page__title">
+            {title}
+          </h1>
+          <p className="subtitle quest-page__subtitle">
+            <span className="visually-hidden">Жанр:</span>{localizedQuestGenre}
+          </p>
+          <ul className="tags tags--size-l quest-page__tags">
+            <li className="tags__item">
+              <svg width={11} height={14} aria-hidden="true">
+                <use xlinkHref="#icon-person" />
+              </svg>
+              {minParticipants}–{maxParticipants}&nbsp;чел
+            </li>
+            <li className="tags__item">
+              <svg width={14} height={14} aria-hidden="true">
+                <use xlinkHref="#icon-level" />
+              </svg>
+              {localizedQuestLevel}
+            </li>
+          </ul>
+          <p className="quest-page__description">
+            {description}
+          </p>
+          <Link
+            className="btn btn--accent btn--cta quest-page__btn"
+            to={AppRoute.Booking}
+          >
+            Забронировать
+          </Link>
         </div>
-        <div className="container container--size-l">
-          <div className="quest-page__content">
-            <h1 className="title title--size-l title--uppercase quest-page__title">
-              Маньяк
-            </h1>
-            <p className="subtitle quest-page__subtitle">
-              <span className="visually-hidden">Жанр:</span>Ужасы
-            </p>
-            <ul className="tags tags--size-l quest-page__tags">
-              <li className="tags__item">
-                <svg width={11} height={14} aria-hidden="true">
-                  <use xlinkHref="#icon-person" />
-                </svg>
-                3–6&nbsp;чел
-              </li>
-              <li className="tags__item">
-                <svg width={14} height={14} aria-hidden="true">
-                  <use xlinkHref="#icon-level" />
-                </svg>
-                Средний
-              </li>
-            </ul>
-            <p className="quest-page__description">
-              В&nbsp;комнате с&nbsp;приглушённым светом несколько человек,
-              незнакомых друг с&nbsp;другом, приходят в&nbsp;себя. Никто
-              не&nbsp;помнит, что произошло прошлым вечером. Руки и&nbsp;ноги
-              связаны, но&nbsp;одному из&nbsp;вас получилось освободиться.
-              На&nbsp;стене висит пугающий таймер и&nbsp;запущен отсчёт
-              60&nbsp;минут. Сможете&nbsp;ли вы&nbsp;разобраться в&nbsp;стрессовой
-              ситуации, помочь другим, разобраться что произошло и&nbsp;выбраться
-              из&nbsp;комнаты?
-            </p>
-            <a
-              className="btn btn--accent btn--cta quest-page__btn"
-              href="booking.html"
-            >
-              Забронировать
-            </a>
-          </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
 

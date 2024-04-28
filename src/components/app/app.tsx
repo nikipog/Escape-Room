@@ -9,7 +9,7 @@ import BookingPage from '../../pages/booking-page/booking-page';
 import MyQuestsPage from '../../pages/my-quests-page/my-quests-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import Layout from '../layout/layout';
-import { AppRoute, ToastifyErrors } from '../../const';
+import { AppRoute, ToastifyMessage } from '../../const';
 import { useAppDispatch } from '../../hooks/store';
 import { useEffect } from 'react';
 import { questsActions } from '../../store/slices/quests';
@@ -22,7 +22,7 @@ function App(): JSX.Element {
     dispatch(questsActions.fetchAllQuests())
       .unwrap()
       .catch(() => {
-        toast.error(ToastifyErrors.FetchAllQuestsError);
+        toast.error(ToastifyMessage.FetchQuestsError);
       });
   }, [dispatch]);
 
@@ -36,10 +36,8 @@ function App(): JSX.Element {
             path={AppRoute.Main}
             element={<Layout />}
           >
-
             <Route
               index
-              path={AppRoute.Main}
               element={<MainPage />}
             />
             <Route
@@ -60,7 +58,9 @@ function App(): JSX.Element {
             />
             <Route
               path={AppRoute.Quest}
-              element={<QuestPage />}
+              element={(
+                <QuestPage />
+              )}
             />
           </Route>
           <Route
