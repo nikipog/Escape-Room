@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, Endpoint } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { getAuthorizationStatus } from '../../mocks/authorizations-status';
 
 
