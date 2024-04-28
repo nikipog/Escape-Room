@@ -1,4 +1,10 @@
-function ContactsPage (): JSX.Element {
+import LeafletMap from '../../components/leaflet-map/leaflet-map';
+
+function ContactsPage(): JSX.Element {
+
+  const mapCoordinates = { lat: 59.968137, lng: 30.316272 };
+  const mapZoom = 13;
+
   return (
     <div className="wrapper">
       <main className="page-content decorated-page">
@@ -60,7 +66,9 @@ function ContactsPage (): JSX.Element {
             </dl>
             <div className="contacts__map">
               <div className="map">
-                <div className="map__container" />
+                <div className="map__container">
+                  <LeafletMap coordinates={mapCoordinates} zoom={mapZoom} />
+                </div>
               </div>
             </div>
           </div>
