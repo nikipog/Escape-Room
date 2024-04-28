@@ -1,11 +1,16 @@
-import { QuestCard as QuestCardType} from '../../types/quest';
+import { Link, generatePath } from 'react-router-dom';
+import { QuestCard as QuestCardType } from '../../types/quest';
+import { AppRoute } from '../../const';
 
 type QuestCardProps = {
   quest: QuestCardType;
 }
 
-function QuestCard({quest} : QuestCardProps): JSX.Element {
-  const {previewImgWebp, previewImg, title, peopleMinMax, level } = quest;
+function QuestCard({ quest }: QuestCardProps): JSX.Element {
+  const { previewImgWebp, previewImg, title, peopleMinMax, level, id } = quest;
+  const minParticipants = peopleMinMax[0];
+  const maxParticipants = peopleMinMax[1];
+  const url = generatePath(AppRoute.Quest, { id });
   return (
     <div className="quest-card">
       <div className="quest-card__img">
@@ -25,16 +30,19 @@ function QuestCard({quest} : QuestCardProps): JSX.Element {
       </div>
       <div className="quest-card__content">
         <div className="quest-card__info-wrapper">
-          <a className="quest-card__link" href="quest.html">
+          <Link
+            className="quest-card__link"
+            to={url}
+          >
             {title}
-          </a>
+          </Link>
         </div>
         <ul className="tags quest-card__tags">
           <li className="tags__item">
             <svg width={11} height={14} aria-hidden="true">
               <use xlinkHref="#icon-person" />
             </svg>
-            {peopleMinMax[0]}–{peopleMinMax[1]}&nbsp;чел
+            {minParticipants}–{maxParticipants}&nbsp;чел
           </li>
           <li className="tags__item">
             <svg width={14} height={14} aria-hidden="true">
