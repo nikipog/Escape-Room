@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, Endpoint } from '../../const';
 import { getAuthorizationStatus } from '../../mocks/authorizations-status';
 
 
@@ -9,6 +9,11 @@ function Layout(): JSX.Element {
   const authorizationStatus = getAuthorizationStatus();
   const isLoginPage = location.pathname === AppRoute.Login;
   const isMainPage = location.pathname === AppRoute.Main;
+  function isActive(path : string) {
+    // Проверяем, является ли текущий роут началом заданного пути
+    const isMatch = location.pathname === path || location.pathname.startsWith(`${path}quest/`);
+    return isMatch ? 'link active' : 'link';
+  }
 
   return (
     <div className="wrapper">
@@ -38,7 +43,7 @@ function Layout(): JSX.Element {
             <ul className="main-nav__list">
               <li className="main-nav__item">
                 <Link
-                  className="link active"
+                  className={isActive(AppRoute.Main)}
                   to={AppRoute.Main}
                 >
                   Квесты
@@ -46,7 +51,7 @@ function Layout(): JSX.Element {
               </li>
               <li className="main-nav__item">
                 <Link
-                  className="link"
+                  className={isActive(AppRoute.Contacts)}
                   to={AppRoute.Contacts}
                 >
                   Контакты
@@ -56,7 +61,7 @@ function Layout(): JSX.Element {
                 authorizationStatus === AuthorizationStatus.Auth &&
                 <li className="main-nav__item">
                   <Link
-                    className="link"
+                    className={isActive(AppRoute.MyQuests)}
                     to={AppRoute.MyQuests}
                   >
                     Мои бронирования

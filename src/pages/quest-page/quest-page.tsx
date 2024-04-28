@@ -1,12 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { questActions, questSelector } from '../../store/slices/quest';
-import { useEffect } from 'react';
-import { QuestDifficulty, QuestGenre, RequestStatus, ToastifyMessage, QuestGenreLocalization, QuestLevelLocalization, ParticipantsRange, DescriptionRange, AppRoute } from '../../const';
+import { RequestStatus, ToastifyMessage, ParticipantsRange, DescriptionRange, AppRoute } from '../../const';
 import NotFoundPage from '../not-found-page/not-found-page';
-import { Helmet } from 'react-helmet-async';
 import WrongParticipantsCount from '../../components/wrong-participants-number/wrong-participants-number';
-import { toast } from 'react-toastify';
+import { localizeQuestGenre, localizeQuestLevel } from './utils';
 
 function QuestPage(): JSX.Element {
   const quest = useAppSelector(questSelector.quest);
@@ -54,47 +55,9 @@ function QuestPage(): JSX.Element {
   const minParticipants = peopleMinMax[0];
   const maxParticipants = peopleMinMax[1];
 
-  let localizedQuestGenre = '';
+  const localizedQuestGenre = localizeQuestGenre(type);
+  const localizedQuestLevel = localizeQuestLevel(level);
 
-  switch (type) {
-    case (QuestGenre.Adventures): {
-      localizedQuestGenre = QuestGenreLocalization.adventures;
-      break;
-    }
-    case (QuestGenre.Detective): {
-      localizedQuestGenre = QuestGenreLocalization.detective;
-      break;
-    }
-    case (QuestGenre.Horror): {
-      localizedQuestGenre = QuestGenreLocalization.horror;
-      break;
-    }
-    case (QuestGenre.Mystic): {
-      localizedQuestGenre = QuestGenreLocalization.mystic;
-      break;
-    }
-    case (QuestGenre.SciFi): {
-      localizedQuestGenre = QuestGenreLocalization.SciFi;
-      break;
-    }
-  }
-
-  let localizedQuestLevel = '';
-
-  switch (level) {
-    case (QuestDifficulty.Easy): {
-      localizedQuestLevel = QuestLevelLocalization.easy;
-      break;
-    }
-    case (QuestDifficulty.Medium): {
-      localizedQuestLevel = QuestLevelLocalization.medium;
-      break;
-    }
-    case (QuestDifficulty.Hard): {
-      localizedQuestLevel = QuestLevelLocalization.hard;
-      break;
-    }
-  }
 
   return (
     <main className="decorated-page quest-page">
