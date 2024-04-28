@@ -19,9 +19,6 @@ function QuestPage(): JSX.Element {
   useEffect(() => {
     dispatch(questActions.fetchQuest(id as string))
       .unwrap()
-      .catch(() => {
-        toast.error(ToastifyMessage.FetchQuestsError);
-      });
   }, [dispatch, id]);
 
   if (status === RequestStatus.Loading) {

@@ -1,12 +1,12 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../const';
-import { getAuthorizationStatus } from '../../mocks/authorizations-status';
+import { AppRoute } from '../../const';
+import { useAuth } from '../../hooks/user-authorization';
 
 
 function Layout(): JSX.Element {
 
   const location = useLocation();
-  const authorizationStatus = getAuthorizationStatus();
+  const isAuthorized = useAuth();
   const isLoginPage = location.pathname === AppRoute.Login;
   const isMainPage = location.pathname === AppRoute.Main;
   function isActive(path : string) {
@@ -58,7 +58,7 @@ function Layout(): JSX.Element {
                 </Link>
               </li>
               {
-                authorizationStatus === AuthorizationStatus.Auth &&
+                isAuthorized &&
                 <li className="main-nav__item">
                   <Link
                     className={isActive(AppRoute.MyQuests)}
@@ -72,7 +72,7 @@ function Layout(): JSX.Element {
           </nav>
           <div className="header__side-nav">
             {!isLoginPage && (
-              authorizationStatus === AuthorizationStatus.Auth &&
+              isAuthorized &&
               <Link
                 className="btn btn--accent header__side-item"
                 to={AppRoute.Main}
@@ -82,7 +82,7 @@ function Layout(): JSX.Element {
             )}
 
             {!isLoginPage && (
-              authorizationStatus !== AuthorizationStatus.Auth &&
+              !isAuthorized &&
               < Link
                 className="btn header__side-item header__login-btn"
                 to={AppRoute.Login}

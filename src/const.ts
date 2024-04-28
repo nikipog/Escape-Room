@@ -66,6 +66,3 @@ export const DescriptionRange = {
   MaxDescriptionLength: 300,
   MaxUnslicedDescriptionLength: 297
 } as const;
-
-
-
