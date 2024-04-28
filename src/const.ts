@@ -14,7 +14,9 @@ export enum AuthorizationStatus {
 }
 
 export const Endpoint = {
-  Quests: '/quest'
+  Quests: '/quest',
+  Login: '/login',
+  Logout: '/logout',
 } as const;
 
 export const enum RequestStatus { Idle, Loading, Success, Failed }
