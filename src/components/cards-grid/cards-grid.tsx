@@ -6,18 +6,17 @@ type CardsGridProps = {
   allQuests: QuestCardType[];
 }
 
-function CardsGrid({allQuests}: CardsGridProps): JSX.Element {
+function CardsGrid({ allQuests }: CardsGridProps): JSX.Element {
   return (
     <div className="cards-grid">
-      {!allQuests.length ? <NoQuests/> :
+      {!allQuests.length ? <NoQuests /> :
 
         allQuests.map((quest) => (
           <QuestCard
             key={quest.id}
             quest={quest}
           />)
-        )
-      }
+        )}
     </div>
   );
 }

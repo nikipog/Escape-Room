@@ -30,14 +30,17 @@ function App(): JSX.Element {
       });
   }, [dispatch]);
 
-  const checkAuth = dispatch(userActions.checkAuth());
 
   const token = getToken();
   useEffect(() => {
     if (token) {
-      checkAuth;
+      dispatch(userActions.checkAuth())
+        .unwrap()
+        .catch(() => {
+          toast.error(ToastifyMessage.AuthError);
+        });
     }
-  }, [token, checkAuth])
+  }, [token, dispatch]);
 
 
   return (

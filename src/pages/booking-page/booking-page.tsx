@@ -24,8 +24,8 @@ function BookingPage(): JSX.Element {
   useEffect(() => {
     // Убеждаюсь что id определен, перед тем как выполнять запрос
     if (id) {
-      dispatch(bookingInfoActions.fetchBookingInfo(id))
-      dispatch(questActions.fetchQuest(id as string))
+      dispatch(bookingInfoActions.fetchBookingInfo(id));
+      dispatch(questActions.fetchQuest(id))
         .unwrap()
         .catch(() => {
           toast.error(ToastifyMessage.FetchQuestsError);
@@ -37,9 +37,9 @@ function BookingPage(): JSX.Element {
   return (
     <div className="wrapper">
       <main className="page-content decorated-page">
-      <Helmet>
-        <title>Escape Room. Booking Page</title>
-      </Helmet>
+        <Helmet>
+          <title>Escape Room. Booking Page</title>
+        </Helmet>
         <div className="decorated-page__decor" aria-hidden="true">
           <picture>
             <source
@@ -67,7 +67,7 @@ function BookingPage(): JSX.Element {
             <div className="booking-map">
               <div className="map">
                 <div className="map__container" >
-                <LeafletMap coordinates={MAP_COORDINATES_MOCK} zoom={MAP_ZOOM_MOCK}/>
+                  <LeafletMap coordinates={MAP_COORDINATES_MOCK} zoom={MAP_ZOOM_MOCK} />
                 </div>
               </div>
               <p className="booking-map__address">
@@ -100,7 +100,7 @@ function BookingPage(): JSX.Element {
               <fieldset className="booking-form__date-section">
                 <legend className="booking-form__date-title">Завтра</legend>
                 <div className="booking-form__date-inner-wrapper">
-                {tomorrowSlots?.map((slot) => (
+                  {tomorrowSlots?.map((slot) => (
                     <BookingTimeButton
                       key={slot.time}
                       time={slot.time}

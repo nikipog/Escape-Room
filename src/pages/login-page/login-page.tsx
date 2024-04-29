@@ -13,24 +13,22 @@ type FormData = {
 
 function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      // Диспатчим асинхронное действие и ждем завершения
-      const resultAction = await dispatch(userActions.login(data));
-      if (userActions.login.fulfilled.match(resultAction)) {
-        // Если запрос выполнен успешно, перенаправляем пользователя
-        navigate(AppRoute.Main);
-      } else {
-        // Если запрос не успешен, можем показать сообщение об ошибке
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    dispatch(userActions.login(data))
+      .then((resultAction) => {
+        if (userActions.login.fulfilled.match(resultAction)) {
+          navigate(AppRoute.Main);
+        } else {
+          toast.error(ToastifyMessage.AuthError);
+        }
+      })
+      .catch(() => {
         toast.error(ToastifyMessage.AuthError);
-      }
-    } catch (error) {
-      toast.error(ToastifyMessage.AuthError);
-    }
+      });
   };
 
   return (

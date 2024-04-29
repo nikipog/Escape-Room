@@ -16,7 +16,7 @@ function Layout(): JSX.Element {
   const isAuthorized = useAuth();
   const isLoginPage = location.pathname === AppRoute.Login;
   const isMainPage = location.pathname === AppRoute.Main;
-  function isActive(path : string) {
+  function isActive(path: string) {
     // Проверяем, является ли текущий роут началом заданного пути
     const isMatch = location.pathname === path || location.pathname.startsWith(`${path}quest/`);
     return isMatch ? 'link active' : 'link';
@@ -81,12 +81,12 @@ function Layout(): JSX.Element {
             {!isLoginPage && (
               isAuthorized &&
               <button
-              className="btn btn--accent header__side-item"
-              type="button"
-              onClick={handleLogout}
-            >
-              Выйти
-            </button>
+                className="btn btn--accent header__side-item"
+                type="button"
+                onClick={handleLogout}
+              >
+                Выйти
+              </button>
             )}
 
             {!isLoginPage && (

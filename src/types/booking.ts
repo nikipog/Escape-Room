@@ -4,14 +4,14 @@ type QuestLocation = {
 }
 type QuestTime =
   {
-    time: string
-    isAvailable: boolean
+    time: string;
+    isAvailable: boolean;
   }
 
 
 type QuestSlots = {
-  today: QuestTime[]
-  tomorrow: QuestTime[]
+  today: QuestTime[];
+  tomorrow: QuestTime[];
 }
 
 type BookingInformation = {
@@ -23,7 +23,7 @@ type BookingInformation = {
 type AllowedQuestDay = 'today' | 'tomorrow'
 
 type QuestBooking = {
-  date: AllowedQuestDay
+  date: AllowedQuestDay;
   time: string;
   contactPerson: string;
   phone: string;
@@ -32,4 +32,5 @@ type QuestBooking = {
   placeId: string;
   }
 
-export type { BookingInformation, QuestSlots, QuestTime, QuestBooking }
+export type { BookingInformation, QuestSlots, QuestTime, QuestBooking };
+

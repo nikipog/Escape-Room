@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../hooks/store';
 import { questActions, questSelector } from '../../store/slices/quest';
-import { RequestStatus, ToastifyMessage, ParticipantsRange, DescriptionRange, AppRoute } from '../../const';
+import { RequestStatus, ToastifyMessage, ParticipantsRange, DescriptionRange } from '../../const';
 import NotFoundPage from '../not-found-page/not-found-page';
 import WrongParticipantsCount from '../../components/wrong-participants-number/wrong-participants-number';
 import { localizeQuestGenre, localizeQuestLevel } from './utils';
@@ -14,6 +14,7 @@ function QuestPage(): JSX.Element {
   const status = useAppSelector(questSelector.questStatus);
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
+  const safeId = id ?? '';
 
 
   useEffect(() => {
@@ -105,7 +106,7 @@ function QuestPage(): JSX.Element {
           </p>
           <Link
             className="btn btn--accent btn--cta quest-page__btn"
-            to={`/quest/${id}/booking`}
+            to={`/quest/${safeId}/booking`}
           >
             Забронировать
           </Link>
