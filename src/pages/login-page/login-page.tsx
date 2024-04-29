@@ -6,13 +6,10 @@ import { AppRoute, PasswordLenght, ToastifyMessage } from '../../const';
 import { toast } from 'react-toastify';
 import { AuthRegExp } from '../../const';
 
-
 type FormData = {
   email: string;
   password: string;
 }
-
-
 
 function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -32,12 +29,9 @@ function LoginPage(): JSX.Element {
         toast.error(ToastifyMessage.AuthError);
       }
     } catch (error) {
-
-      console.error('Ошибка сервера', error);
       toast.error(ToastifyMessage.AuthError);
     }
   };
-
 
   return (
     <div className="wrapper">

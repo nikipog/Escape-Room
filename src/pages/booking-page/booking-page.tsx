@@ -1,19 +1,56 @@
+import { useEffect } from 'react';
+import LeafletMap from '../../components/leaflet-map/leaflet-map';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet-async';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { bookingInfoActions, bookingInfoSelector } from '../../store/slices/booking';
+import { ToastifyMessage } from '../../const';
+import { questActions, questSelector } from '../../store/slices/quest';
+import BookingTimeButton from '../../components/booking-time-button/booking-time-button';
+
 function BookingPage(): JSX.Element {
+  const bookingInfo = useAppSelector(bookingInfoSelector.bookingInfo);
+  const todaySlots = bookingInfo?.[0].slots.today;
+  const tomorrowSlots = bookingInfo?.[0].slots.tomorrow;
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  const quest = useAppSelector(questSelector.quest);
+
+  const MAP_COORDINATES_MOCK = { lat: 59.968137, lng: 30.316272 };
+  const MAP_ZOOM_MOCK = 14;
+
+  useEffect(() => {
+    // Убеждаюсь что id определен, перед тем как выполнять запрос
+    if (id) {
+      dispatch(bookingInfoActions.fetchBookingInfo(id))
+      dispatch(questActions.fetchQuest(id as string))
+        .unwrap()
+        .catch(() => {
+          toast.error(ToastifyMessage.FetchQuestsError);
+        });
+    }
+  }, [dispatch, id]);
+
+
   return (
     <div className="wrapper">
       <main className="page-content decorated-page">
+      <Helmet>
+        <title>Escape Room. Booking Page</title>
+      </Helmet>
         <div className="decorated-page__decor" aria-hidden="true">
           <picture>
             <source
               type="image/webp"
-              srcSet="img/content/maniac/maniac-bg-size-m.webp, img/content/maniac/maniac-bg-size-m@2x.webp 2x"
+              src={quest?.coverImgWebp}
             />
             <img
-              src="img/content/maniac/maniac-bg-size-m.jpg"
-              srcSet="img/content/maniac/maniac-bg-size-m@2x.jpg 2x"
+              src={quest?.coverImg}
               width={1366}
               height={1959}
-              alt=""
+              alt={quest?.title}
             />
           </picture>
         </div>
@@ -23,13 +60,15 @@ function BookingPage(): JSX.Element {
               Бронирование квеста
             </h1>
             <p className="title title--size-m title--uppercase page-content__title">
-              Маньяк
+              {quest?.title}
             </p>
           </div>
           <div className="page-content__item">
             <div className="booking-map">
               <div className="map">
-                <div className="map__container" />
+                <div className="map__container" >
+                <LeafletMap coordinates={MAP_COORDINATES_MOCK} zoom={MAP_ZOOM_MOCK}/>
+                </div>
               </div>
               <p className="booking-map__address">
                 Вы&nbsp;выбрали: наб. реки Карповки&nbsp;5, лит&nbsp;П, м.
@@ -47,115 +86,28 @@ function BookingPage(): JSX.Element {
               <fieldset className="booking-form__date-section">
                 <legend className="booking-form__date-title">Сегодня</legend>
                 <div className="booking-form__date-inner-wrapper">
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="today9h45m"
+                  {todaySlots?.map((slot) => (
+                    <BookingTimeButton
+                      key={slot.time}
+                      time={slot.time}
+                      isAvailable={slot.isAvailable}
                       name="date"
-                      required
-                      defaultValue="today9h45m"
                     />
-                    <span className="custom-radio__label">9:45</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="today15h00m"
-                      name="date"
-                      defaultChecked
-                      required
-                      defaultValue="today15h00m"
-                    />
-                    <span className="custom-radio__label">15:00</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="today17h30m"
-                      name="date"
-                      required
-                      defaultValue="today17h30m"
-                    />
-                    <span className="custom-radio__label">17:30</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="today19h30m"
-                      name="date"
-                      required
-                      defaultValue="today19h30m"
-                      disabled
-                    />
-                    <span className="custom-radio__label">19:30</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="today21h30m"
-                      name="date"
-                      required
-                      defaultValue="today21h30m"
-                    />
-                    <span className="custom-radio__label">21:30</span>
-                  </label>
+                  ))}
+
                 </div>
               </fieldset>
               <fieldset className="booking-form__date-section">
                 <legend className="booking-form__date-title">Завтра</legend>
                 <div className="booking-form__date-inner-wrapper">
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="tomorrow11h00m"
+                {tomorrowSlots?.map((slot) => (
+                    <BookingTimeButton
+                      key={slot.time}
+                      time={slot.time}
+                      isAvailable={slot.isAvailable}
                       name="date"
-                      required
-                      defaultValue="tomorrow11h00m"
                     />
-                    <span className="custom-radio__label">11:00</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="tomorrow15h00m"
-                      name="date"
-                      required
-                      defaultValue="tomorrow15h00m"
-                      disabled
-                    />
-                    <span className="custom-radio__label">15:00</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="tomorrow17h30m"
-                      name="date"
-                      required
-                      defaultValue="tomorrow17h30m"
-                      disabled
-                    />
-                    <span className="custom-radio__label">17:30</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="tomorrow19h45m"
-                      name="date"
-                      required
-                      defaultValue="tomorrow19h45m"
-                    />
-                    <span className="custom-radio__label">19:45</span>
-                  </label>
-                  <label className="custom-radio booking-form__date">
-                    <input
-                      type="radio"
-                      id="tomorrow21h30m"
-                      name="date"
-                      required
-                      defaultValue="tomorrow21h30m"
-                    />
-                    <span className="custom-radio__label">21:30</span>
-                  </label>
+                  ))}
                 </div>
               </fieldset>
             </fieldset>

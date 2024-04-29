@@ -105,7 +105,7 @@ function QuestPage(): JSX.Element {
           </p>
           <Link
             className="btn btn--accent btn--cta quest-page__btn"
-            to={AppRoute.Booking}
+            to={`/quest/${id}/booking`}
           >
             Забронировать
           </Link>
