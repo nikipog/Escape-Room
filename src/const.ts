@@ -17,6 +17,7 @@ export const Endpoint = {
   Quests: '/quest',
   Login: '/login',
   Logout: '/logout',
+
 } as const;
 
 export const enum RequestStatus { Idle, Loading, Success, Failed }
