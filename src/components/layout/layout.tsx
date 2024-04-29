@@ -1,9 +1,16 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAuth } from '../../hooks/user-authorization';
+import { useAppDispatch } from '../../hooks/store';
+import { userActions } from '../../store/slices/user';
 
 
 function Layout(): JSX.Element {
+
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(userActions.logout());
+  };
 
   const location = useLocation();
   const isAuthorized = useAuth();
@@ -73,12 +80,13 @@ function Layout(): JSX.Element {
           <div className="header__side-nav">
             {!isLoginPage && (
               isAuthorized &&
-              <Link
-                className="btn btn--accent header__side-item"
-                to={AppRoute.Main}
-              >
-                Выйти
-              </Link>
+              <button
+              className="btn btn--accent header__side-item"
+              type="button"
+              onClick={handleLogout}
+            >
+              Выйти
+            </button>
             )}
 
             {!isLoginPage && (
