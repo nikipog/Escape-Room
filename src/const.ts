@@ -14,13 +14,16 @@ export enum AuthorizationStatus {
 }
 
 export const Endpoint = {
-  Quests: '/quest'
+  Quests: '/quest',
+  Login: '/login',
+  Logout: '/logout',
 } as const;
 
 export const enum RequestStatus { Idle, Loading, Success, Failed }
 
 export const ToastifyMessage = {
-  FetchQuestsError: 'Не удалось загрузить данные с сервера'
+  FetchQuestsError: 'Не удалось загрузить данные с сервера',
+  AuthError: 'Ошибка отправки данных на сервер'
 } as const;
 
 export const enum QuestGenre {
@@ -65,5 +68,13 @@ export const DescriptionRange = {
   MaxUnslicedDescriptionLength: 297
 } as const;
 
+export const AuthRegExp = {
+  Email: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+  Password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,15}$/
+} as const;
 
+export const PasswordLenght = {
+  Min: 3,
+  Max: 15
+} as const;
 

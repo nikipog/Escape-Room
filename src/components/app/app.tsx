@@ -1,4 +1,6 @@
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
+import { Route, BrowserRouter, Routes} from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer, toast } from 'react-toastify';
 import MainPage from '../../pages/main-page/main-page';
@@ -11,8 +13,10 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import Layout from '../layout/layout';
 import { AppRoute, ToastifyMessage } from '../../const';
 import { useAppDispatch } from '../../hooks/store';
-import { useEffect } from 'react';
 import { questsActions } from '../../store/slices/quests';
+import ProtectedRoute from '../protected-route/protected-route';
+import { userActions } from '../../store/slices/user';
+import { getToken } from '../../services/token';
 
 
 function App(): JSX.Element {
@@ -25,6 +29,15 @@ function App(): JSX.Element {
         toast.error(ToastifyMessage.FetchQuestsError);
       });
   }, [dispatch]);
+
+  const checkAuth = dispatch(userActions.checkAuth());
+
+  const token = getToken();
+  useEffect(() => {
+    if (token) {
+      checkAuth;
+    }
+  }, [token, checkAuth])
 
 
   return (
@@ -40,29 +53,44 @@ function App(): JSX.Element {
               index
               element={<MainPage />}
             />
+
             <Route
               path={AppRoute.Booking}
               element={<BookingPage />}
             />
+
             <Route
               path={AppRoute.Contacts}
               element={<ContactsPage />}
             />
+
             <Route
               path={AppRoute.Login}
-              element={<LoginPage />}
+              element={(
+                <ProtectedRoute onlyUnAuth>
+                  <LoginPage />
+                </ProtectedRoute>
+              )}
             />
+
             <Route
               path={AppRoute.MyQuests}
-              element={<MyQuestsPage />}
+              element={(
+                <ProtectedRoute>
+                  <MyQuestsPage />
+                </ProtectedRoute>
+              )}
             />
+
             <Route
               path={AppRoute.Quest}
               element={(
                 <QuestPage />
               )}
             />
+
           </Route>
+
           <Route
             path='*'
             element={<NotFoundPage />}
